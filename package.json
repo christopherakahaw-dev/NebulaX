@@ -1,0 +1,9 @@
+{
+  "name": "senior-transit-companion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive prototype of the SG Senior Transit Companion, built from the Stitch design export.",
+  "scripts": {
+    "start": "npx --yes http-server -p 8000 -c-1 ."
+  }
+}

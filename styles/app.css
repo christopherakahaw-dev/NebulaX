@@ -1,0 +1,163 @@
+/* ==========================================================================
+   Global styles for the Senior Transit Companion prototype.
+   Anything here is either (a) copied from the Stitch exports, or
+   (b) plumbing for the interactive behaviours (text size, high contrast).
+   The visual design itself lives in the Tailwind classes on each screen.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Per-screen token overrides
+   The two exports disagreed on a few tokens. Each screen sets
+   data-screen-theme on <body>, which re-points the CSS variables that
+   src/theme.js feeds to Tailwind.
+   -------------------------------------------------------------------------- */
+:root,
+body[data-screen-theme='companion'] {
+  --c-surface: #f8f9fc;
+  --c-background: #f8f9fc;
+  --r-default: 0.5rem;
+  --r-lg: 0.75rem;
+  --r-xl: 1rem;
+  --r-2xl: 1.25rem;
+}
+
+body[data-screen-theme='map'] {
+  --c-surface: #f9f9ff;
+  --c-background: #f9f9ff;
+  --r-default: 0.25rem;
+  --r-lg: 0.5rem;
+  --r-xl: 0.75rem;
+  --r-2xl: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. Typography + icon settings (from the exports)
+   -------------------------------------------------------------------------- */
+html {
+  /* Driven by the "Text size" control. 1em = whatever the browser's base size is,
+     so the user's own browser preference is respected and then scaled. */
+  font-size: calc(1em * var(--ui-scale, 1));
+}
+
+body {
+  min-height: 100dvh;
+  font-family: 'Inter', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-headline {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+body[data-screen-theme='map'] .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-filled,
+body[data-screen-theme='map'] .material-symbols-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Tailwind v3 has no shadow-xs; the export assumed v4's value. */
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   3. Motion (from the map export) + screen transitions
+   -------------------------------------------------------------------------- */
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 0.2; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.beacon-pulse {
+  animation: pulse-ring 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.screen-enter {
+  animation: screen-in 180ms ease-out both;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.toast-enter { animation: toast-in 200ms ease-out both; }
+.toast-leave { opacity: 0; transition: opacity 200ms ease-in; }
+
+/* --------------------------------------------------------------------------
+   4. Accessibility helpers
+   -------------------------------------------------------------------------- */
+
+/* Visible keyboard focus everywhere, without changing the resting design. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid #153328;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* "High Contrast" toggle on the map screen. Off by default, so the exported
+   design renders exactly as delivered until the user asks for it. */
+body.high-contrast {
+  --c-surface: #ffffff;
+  --c-background: #ffffff;
+}
+
+body.high-contrast .text-on-surface-variant,
+body.high-contrast .text-slate-500,
+body.high-contrast .text-slate-600,
+body.high-contrast .text-slate-700 {
+  color: #111827;
+}
+
+body.high-contrast [class*='border-'] {
+  border-color: #111827;
+}
+
+body.high-contrast a,
+body.high-contrast button {
+  text-decoration-thickness: 2px;
+}
+
+/* Screen-reader-only text for live status announcements. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beacon-pulse,
+  .screen-enter,
+  .toast-enter {
+    animation: none !important;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
