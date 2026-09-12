@@ -19,6 +19,33 @@ python3 -m http.server 8000
 
 No build step and no dependencies: edit a file, refresh the browser.
 
+## Deploy to Vercel
+
+The repo is configured for a zero-build static deploy (`vercel.json`): no build command,
+no install step, the repo root is the output directory.
+
+**From the Vercel dashboard (easiest — no CLI, no token):**
+
+1. <https://vercel.com/new> → **Import Git Repository** → `christopherakahaw-dev/NebulaX`.
+2. Leave every build setting untouched — `vercel.json` already sets Framework Preset to
+   *Other*, an empty build command and `.` as the output directory.
+3. Pick the branch to deploy (`claude/senior-transit-companion-tav9ml`, or merge to the
+   default branch first) → **Deploy**.
+
+**From the CLI instead:**
+
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
+
+Pushes to the connected branch redeploy automatically.
+
+Note that the app loads Tailwind, Google Fonts and Material Symbols from their CDNs at
+runtime, so the deployed page needs public internet access to those hosts to render —
+that is inherited from the design export.
+
 ## Screens
 
 | Route | Screen | Source |
