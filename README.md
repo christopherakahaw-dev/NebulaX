@@ -64,9 +64,10 @@ anything new.
 ## What is interactive
 
 **Route screen**
-- `Text: Large` cycles Large → Extra Large → Largest → Standard and rescales the whole app
-  (persisted). Large (1x) is the default and renders exactly as designed; Standard (0.875x)
-  is there for anyone who finds the design's senior-sized type too big.
+- `Text: Large` opens a dropdown with four sizes — Standard (0.875x), Large (1x, default),
+  Extra Large (1.15x) and Largest (1.3x). Each row previews its own size. The choice
+  rescales the whole app and persists. Large renders exactly as designed; Standard is there
+  for anyone who finds the design's senior-sized type too big.
 - `Play Spoken Guide` reads the route aloud via the Web Speech API; tap again to stop.
 - The `English / 中文` label switches the spoken language.
 - Each step card opens the map guide (click, or Enter/Space when focused).
@@ -101,7 +102,7 @@ src/
   router.js           hash router
   speech.js           Web Speech API wrapper (EN / 中文)
   app.js              bootstrap: routes, preferences, milestone announcements
-  ui/                 toast + modal
+  ui/                 toast, modal + dropdown
   screens/
     route.js          Stitch export 1
     map.js            Stitch export 2

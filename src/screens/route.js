@@ -5,7 +5,8 @@
  */
 
 import { user, family, trip, steps, advisory, preTripChecks, notificationTemplates } from '../data.js';
-import { getState, actions, currentStepIndex, busEtaLabel, textSizeLabel } from '../state.js';
+import { getState, actions, currentStepIndex, busEtaLabel, textSizeLabel, TEXT_SIZES } from '../state.js';
+import { renderDropdown, mountDropdown, syncDropdown } from '../ui/dropdown.js';
 import { toggleSpeak, isSpeaking, stop as stopSpeech } from '../speech.js';
 import { toast } from '../ui/toast.js';
 import { openModal } from '../ui/modal.js';
@@ -107,10 +108,22 @@ function render(state) {
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button data-action="text-size" aria-label="Toggle larger readable text size" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-full text-sm font-bold border-2 border-slate-300 transition-colors shadow-xs shrink-0">
-        <span class="material-symbols-outlined text-xl text-emerald-800">text_fields</span>
-        <span>Text: <span id="text-size-label">${textSizeLabel()}</span></span>
-      </button>
+      ${renderDropdown({
+        id: 'text-size',
+        label: 'Choose text size',
+        triggerClass:
+          'flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-full text-sm font-bold border-2 border-slate-300 transition-colors shadow-xs shrink-0',
+        triggerHtml: `<span class="material-symbols-outlined text-xl text-emerald-800">text_fields</span>
+                      <span>Text: <span id="text-size-label">${textSizeLabel()}</span></span>
+                      <span class="material-symbols-outlined text-lg text-slate-500">expand_more</span>`,
+        items: TEXT_SIZES.map((t) => ({
+          value: t.id,
+          label: t.label,
+          hint: t.hint,
+          previewScale: t.scale,
+          selected: t.id === state.prefs.textSize
+        }))
+      })}
     </div>
   </div>
 </header>
@@ -246,8 +259,17 @@ function render(state) {
 
 function mount(root) {
   root.addEventListener('click', onClick);
+
+  const unmountDropdown = mountDropdown(root, 'text-size', {
+    onSelect: (value) => {
+      const size = actions.setTextSize(value);
+      if (size) toast(`Text size: ${size.label}`, { tone: 'info', duration: 2200 });
+    }
+  });
+
   return () => {
     root.removeEventListener('click', onClick);
+    unmountDropdown();
     stopSpeech();
   };
 }
@@ -257,12 +279,6 @@ function onClick(e) {
   if (!el) return;
 
   switch (el.dataset.action) {
-    case 'text-size': {
-      const next = actions.cycleTextSize();
-      toast(`Text size: ${next.label}`, { tone: 'info', duration: 2200 });
-      break;
-    }
-
     case 'toggle-language': {
       const lang = actions.toggleLanguage();
       toast(lang === 'zh' ? '语音指南已切换为中文' : 'Voice guide switched to English', { tone: 'info' });
@@ -322,6 +338,7 @@ function update(state, root) {
   };
 
   set('text-size-label', textSizeLabel());
+  syncDropdown(root, 'text-size', state.prefs.textSize);
   set('lang-label', state.prefs.language === 'zh' ? '中文' : 'English');
   set('bus-eta-badge', busEtaLabel());
 

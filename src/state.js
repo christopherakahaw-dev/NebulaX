@@ -14,10 +14,10 @@ import { config, trip, steps, notificationTemplates, family } from './data.js';
  * "Standard" is below the design scale for anyone who finds it too big.
  */
 export const TEXT_SIZES = [
-  { id: 'standard', label: 'Standard', scale: 0.875 },
-  { id: 'large', label: 'Large', scale: 1 },
-  { id: 'xlarge', label: 'Extra Large', scale: 1.15 },
-  { id: 'largest', label: 'Largest', scale: 1.3 }
+  { id: 'standard', label: 'Standard', scale: 0.875, hint: 'Smaller than designed' },
+  { id: 'large', label: 'Large', scale: 1, hint: 'Recommended' },
+  { id: 'xlarge', label: 'Extra Large', scale: 1.15, hint: '15% larger' },
+  { id: 'largest', label: 'Largest', scale: 1.3, hint: '30% larger' }
 ];
 
 /** Journey phases in order. `planned` is before the user confirms departure. */
@@ -136,11 +136,11 @@ export function textSizeLabel() {
    -------------------------------------------------------------------------- */
 
 export const actions = {
-  cycleTextSize() {
-    const i = TEXT_SIZES.findIndex((t) => t.id === state.prefs.textSize);
-    const next = TEXT_SIZES[(i + 1) % TEXT_SIZES.length];
-    update({ prefs: { ...state.prefs, textSize: next.id } });
-    return next;
+  setTextSize(id) {
+    const size = TEXT_SIZES.find((t) => t.id === id);
+    if (!size) return null;
+    update({ prefs: { ...state.prefs, textSize: size.id } });
+    return size;
   },
 
   setLanguage(language) {
