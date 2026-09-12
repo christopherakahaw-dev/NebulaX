@@ -64,7 +64,9 @@ anything new.
 ## What is interactive
 
 **Route screen**
-- `Text: Large` cycles Large → Extra Large → Largest and rescales the whole app (persisted).
+- `Text: Large` cycles Large → Extra Large → Largest → Standard and rescales the whole app
+  (persisted). Large (1x) is the default and renders exactly as designed; Standard (0.875x)
+  is there for anyone who finds the design's senior-sized type too big.
 - `Play Spoken Guide` reads the route aloud via the Web Speech API; tap again to stop.
 - The `English / 中文` label switches the spoken language.
 - Each step card opens the map guide (click, or Enter/Space when focused).

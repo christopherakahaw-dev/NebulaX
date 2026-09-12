@@ -8,8 +8,13 @@
 
 import { config, trip, steps, notificationTemplates, family } from './data.js';
 
-/** Text-size steps. The exported design is already large type, so "large" is 1x. */
+/**
+ * Text-size steps. The exported design is already large type, so "large" is 1x
+ * and stays the default -- the app opens rendering exactly as designed.
+ * "Standard" is below the design scale for anyone who finds it too big.
+ */
 export const TEXT_SIZES = [
+  { id: 'standard', label: 'Standard', scale: 0.875 },
   { id: 'large', label: 'Large', scale: 1 },
   { id: 'xlarge', label: 'Extra Large', scale: 1.15 },
   { id: 'largest', label: 'Largest', scale: 1.3 }
